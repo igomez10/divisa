@@ -11,19 +11,20 @@
 <div ng-app="myApp" ng-controller="myCtrl">
 <div>
 <h1 align='center'>
-
-<label>Fecha:</label>{{ultimaFecha}} 
+<div ng-repeat='dato in datos'>
+<label>Dato:</label>{{dato.resource.fields.name}} 
 <p><p>
-<label>Valor de Cierre</label>{{ultimoValor}}
+<label>Valor:</label>{{dato.resource.fields.price}}
 {{prueba}}
+<br><br><br>
 </h1>
 </div>
 
 
 <div align=center>
 <label>Fecha a buscar</label>
-<input align="center" type="text" ng-model='fechaBuscada'>
-<button ng-click='buscar(fechaBuscada)'>Buscar</button>
+<input align="center" type="text" ng-model='busqueda'>
+<button ng-click='buscar(busqueda)'>Buscar</button>
 <div>
 <p>
 fecha Buscada: {{existe}}
@@ -33,27 +34,29 @@ fecha Buscada: {{existe}}
 	Valor encontrado: {{valorEncontrado}}
 </p>
 </div>
-
+</div>
 </div>
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope,$http,$interval) {
 	$scope.mensaje='cargando....';
 	var registros="no hay";
+	
 	$scope.agregar=$interval(function(){
-		$http.get('https://www.quandl.com/api/v3/datasets/COM/COFFEE_CLMB.json?api_key=KcCkwZ72yMwzQtCEqoTb').then(function(response){
-			registros=response.data.dataset.data;
+		$http.get('http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json').then(function(response){
+			registros=response.data;
 			
-			$scope.ultimaFecha = registros[0][0];
-			$scope.ultimoValor = registros[0][1];
+			$scope.datos = registros.list.resources;
+			$scope.ultimaFecha=$scope.algo;
 			})
-		},100);
+		},1000);
+		
 	$scope.valorEncontrado='no encontramos un valor';	
-	$scope.buscar=function(fechaBuscada){
-		$scope.existe=fechaBuscada;
+	$scope.buscar=function(busqueda){
+		$scope.existe=busqueda;
 		for(var i=0; i<registros.length;i++){
 			$scope.fechaCiclo=registros[i][0];
-			if($scope.fechaCiclo===fechaBuscada){
+			if($scope.fechaCiclo===busqueda){
 				$scope.valorEncontrado=registros[i][1];
 			}
 		}
