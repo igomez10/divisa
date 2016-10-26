@@ -9,33 +9,26 @@
 
 
 <div ng-app="myApp" ng-controller="myCtrl">
-<div>
-<h1 align='center'>
-<div ng-repeat='dato in datos'>
-<label>Dato:</label>{{dato.resource.fields.name}} 
-<p><p>
-<label>Valor:</label>{{dato.resource.fields.price}}
-{{prueba}}
-<br><br><br>
-</h1>
+	<div>
+		<h1 align='center'>
+			<div ng-repeat='dato in datos'>
+				<div>
+				<label>Dato:</label>{{dato.resource.fields.name}} 
+				<p></p>
+				<label>Valor:</label>{{dato.resource.fields.price}}
+				<p></p>
+				<label ng-show={{cambio(dato.resource.fields.price)}}>Fecha(d:h:m):</label>{{dato.resource.fields.utctime | date:' dd:HH:mm:ss'}}
+				<hr>
+				</div>
+			</div>
+		</h1>
+	</div>
+</div>
 </div>
 
 
-<div align=center>
-<label>Fecha a buscar</label>
-<input align="center" type="text" ng-model='busqueda'>
-<button ng-click='buscar(busqueda)'>Buscar</button>
-<div>
-<p>
-fecha Buscada: {{existe}}
-</p>
-</div>
-<p>
-	Valor encontrado: {{valorEncontrado}}
-</p>
-</div>
-</div>
-</div>
+
+
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope,$http,$interval) {
@@ -50,17 +43,12 @@ app.controller('myCtrl', function($scope,$http,$interval) {
 			$scope.ultimaFecha=$scope.algo;
 			})
 		},1000);
-		
-	$scope.valorEncontrado='no encontramos un valor';	
-	$scope.buscar=function(busqueda){
-		$scope.existe=busqueda;
-		for(var i=0; i<registros.length;i++){
-			$scope.fechaCiclo=registros[i][0];
-			if($scope.fechaCiclo===busqueda){
-				$scope.valorEncontrado=registros[i][1];
-			}
+	$scope.cambio=function (a) {
+		if(a>1){
+			return true;
 		}
-		};		
+		return false;
+	};
 });
 </script>
 </body>
